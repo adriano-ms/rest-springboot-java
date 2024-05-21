@@ -23,6 +23,60 @@ public class MathController {
 		}
 		return convertToDouble(numberOne) + convertToDouble(numberTwo);
 	}
+	
+	@GetMapping("/subtraction/{numberOne}/{numberTwo}")
+	public Double subtraction(
+			@PathVariable(value = "numberOne") String numberOne,
+			@PathVariable(value = "numberTwo") String numberTwo) throws Exception 
+	{
+		if(!isNumeric(numberOne) || !isNumeric(numberTwo)) {
+			throw new UnsupportedMathOperationException("Please, set a numeric value!");
+		}
+		return convertToDouble(numberOne) - convertToDouble(numberTwo);
+	}
+	
+	@GetMapping("/multiplication/{numberOne}/{numberTwo}")
+	public Double multiplication(
+			@PathVariable(value = "numberOne") String numberOne,
+			@PathVariable(value = "numberTwo") String numberTwo) throws Exception 
+	{
+		if(!isNumeric(numberOne) || !isNumeric(numberTwo)) {
+			throw new UnsupportedMathOperationException("Please, set a numeric value!");
+		}
+		return convertToDouble(numberOne) * convertToDouble(numberTwo);
+	}
+	
+	@GetMapping("/division/{numberOne}/{numberTwo}")
+	public Double division(
+			@PathVariable(value = "numberOne") String numberOne,
+			@PathVariable(value = "numberTwo") String numberTwo) throws Exception 
+	{
+		if(!isNumeric(numberOne) || !isNumeric(numberTwo)) {
+			throw new UnsupportedMathOperationException("Please, set a numeric value!");
+		}
+		return convertToDouble(numberOne) / convertToDouble(numberTwo);
+	}
+
+	@GetMapping("/average/{numberOne}/{numberTwo}")
+	public Double average(
+			@PathVariable(value = "numberOne") String numberOne,
+			@PathVariable(value = "numberTwo") String numberTwo) throws Exception 
+	{
+		if(!isNumeric(numberOne) || !isNumeric(numberTwo)) {
+			throw new UnsupportedMathOperationException("Please, set a numeric value!");
+		}
+		return (convertToDouble(numberOne) + convertToDouble(numberTwo)) / 2;
+	}
+	
+	@GetMapping("/squareroot/{number}")
+	public Double squareroot(
+			@PathVariable(value = "number") String number) throws Exception 
+	{
+		if(!isNumeric(number)) {
+			throw new UnsupportedMathOperationException("Please, set a numeric value!");
+		}
+		return Math.sqrt(convertToDouble(number));
+	}
 
 	private Double convertToDouble(String strNumber) {
 		if(strNumber == null) {

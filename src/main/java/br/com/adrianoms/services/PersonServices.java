@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.adrianoms.data.vo.v1.PersonVO;
+import br.com.adrianoms.data.vo.v2.PersonVOV2;
 import br.com.adrianoms.exceptions.ResourceNotFoundException;
 import br.com.adrianoms.mapper.DozerMapper;
+import br.com.adrianoms.mapper.custom.PersonMapper;
 import br.com.adrianoms.model.Person;
 import br.com.adrianoms.repositories.PersonRepository;
 
@@ -17,6 +19,9 @@ public class PersonServices {
 
 	@Autowired
 	private PersonRepository respository;
+	
+	@Autowired
+	private PersonMapper mapper;
 
 	private Logger logger = Logger.getLogger(PersonServices.class.getName());
 
@@ -36,6 +41,12 @@ public class PersonServices {
 		logger.info("Creating one person!");
 		var entity = respository.save(DozerMapper.parseObject(person, Person.class));
 		return DozerMapper.parseObject(entity, PersonVO.class);
+	}
+	
+	public PersonVOV2 createV2(PersonVOV2 person) {
+		logger.info("Creating one person with V2!");
+		var entity = respository.save(mapper.convertVOToEntity(person));
+		return mapper.convertEntityToVO(entity);
 	}
 
 	public PersonVO update(PersonVO person) {

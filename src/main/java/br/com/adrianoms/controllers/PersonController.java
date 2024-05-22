@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.adrianoms.model.Person;
+import br.com.adrianoms.data.vo.v1.PersonVO;
 import br.com.adrianoms.services.PersonServices;
 
 @RestController
@@ -25,24 +25,24 @@ public class PersonController {
 	private PersonServices service = new PersonServices();
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Person findById(@PathVariable(value = "id") Long id) {
+	public PersonVO findById(@PathVariable(value = "id") Long id) {
 		return service.findById(id);
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Person> findAll() {
+	public List<PersonVO> findAll() {
 		return service.findAll();
 	}
 	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Person create(@RequestBody Person person) {
+	public PersonVO create(@RequestBody PersonVO person) {
 		return service.create(person);
 	}
 	
 	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Person update(@RequestBody Person person) {
+	public PersonVO update(@RequestBody PersonVO person) {
 		return service.update(person);
-	}
+	}	
 	
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {

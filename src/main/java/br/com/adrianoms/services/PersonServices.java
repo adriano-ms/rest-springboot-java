@@ -6,7 +6,9 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.adrianoms.data.vo.v1.PersonVO;
 import br.com.adrianoms.exceptions.ResourceNotFoundException;
+import br.com.adrianoms.mapper.DozerMapper;
 import br.com.adrianoms.model.Person;
 import br.com.adrianoms.repositories.PersonRepository;
 
@@ -18,23 +20,25 @@ public class PersonServices {
 
 	private Logger logger = Logger.getLogger(PersonServices.class.getName());
 
-	public Person findById(Long id) {
+	public PersonVO findById(Long id) {
 		logger.info("Finding one person!");
-		return respository.findById(id)
+		var entity = respository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("No records found to this ID!"));
+		return DozerMapper.parseObject(entity, PersonVO.class);
 	}
 
-	public List<Person> findAll() {
+	public List<PersonVO> findAll() {
 		logger.info("Finding all people!");
-		return respository.findAll();
+		return DozerMapper.parseListObjects(respository.findAll(), PersonVO.class);
 	}
 
-	public Person create(Person person) {
+	public PersonVO create(PersonVO person) {
 		logger.info("Creating one person!");
-		return respository.save(person);
+		var entity = respository.save(DozerMapper.parseObject(person, Person.class));
+		return DozerMapper.parseObject(entity, PersonVO.class);
 	}
 
-	public Person update(Person person) {
+	public PersonVO update(PersonVO person) {
 		logger.info("Creating one person!");
 		var entity = respository.findById(person.getId())
 				.orElseThrow(() -> new ResourceNotFoundException("No records found to this ID!"));
@@ -42,7 +46,7 @@ public class PersonServices {
 		entity.setLastName(person.getLastName());
 		entity.setAddress(person.getAddress());
 		entity.setGender(person.getGender());
-		return respository.save(entity);
+		return DozerMapper.parseObject(respository.save(entity), PersonVO.class);
 	}
 
 	public void delete(Long id) {

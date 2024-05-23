@@ -2,10 +2,11 @@ package br.com.adrianoms.unittests.mockito.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.com.adrianoms.data.vo.v1.PersonVO;
+import br.com.adrianoms.exceptions.RequiredObjectIsNullException;
 import br.com.adrianoms.model.Person;
 import br.com.adrianoms.repositories.PersonRepository;
 import br.com.adrianoms.services.PersonServices;
@@ -62,7 +64,25 @@ class PersonServicesTest {
 
 	@Test
 	void testFindAll() {
-		fail("Not yet implemented");
+		List<Person> entities = input.mockEntityList();
+		
+		when(repository.findAll()).thenReturn(entities);
+		
+		var people = service.findAll();
+		assertNotNull(people);
+		assertEquals(14, people.size());
+		
+		people.stream().forEach(p -> {
+			assertNotNull(p);
+			assertNotNull(p.getKey());
+			assertNotNull(p.getLinks());
+			assertTrue(p.toString().contains("links: [</api/person/v1/"+ p.getKey() +">;rel=\"self\"]"));
+			int index = + people.indexOf(p);
+			assertEquals("First Name Test" + index, p.getFirstName());
+			assertEquals("Last Name Test" + index, p.getLastName());
+			assertEquals("Address Test" + index, p.getAddress());
+			assertEquals((index % 2 == 0 ? "Male" :  "Female"), p.getGender());
+		});
 	}
 
 	@Test
@@ -85,6 +105,14 @@ class PersonServicesTest {
 		assertEquals("Last Name Test1", result.getLastName());
 		assertEquals("Address Test1", result.getAddress());
 		assertEquals("Female", result.getGender());
+	}
+	
+	@Test
+	void testCreateWithNullPerson() {
+		Exception e = assertThrows(RequiredObjectIsNullException.class, () -> service.create(null));
+		String expectedMsg = "It is not allowed to persist a null object!";
+		String actualMsg = e.getMessage();
+		assertTrue(actualMsg.contains(expectedMsg));
 	}
 
 	@Test
@@ -110,6 +138,14 @@ class PersonServicesTest {
 		assertEquals("Last Name Test1", result.getLastName());
 		assertEquals("Address Test1", result.getAddress());
 		assertEquals("Female", result.getGender());
+	}
+	
+	@Test
+	void testUpdateWithNullPerson() {
+		Exception e = assertThrows(RequiredObjectIsNullException.class, () -> service.update(null));
+		String expectedMsg = "It is not allowed to persist a null object!";
+		String actualMsg = e.getMessage();
+		assertTrue(actualMsg.contains(expectedMsg));
 	}
 
 	@Test

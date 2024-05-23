@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.adrianoms.controllers.PersonController;
 import br.com.adrianoms.data.vo.v1.PersonVO;
+import br.com.adrianoms.exceptions.RequiredObjectIsNullException;
 import br.com.adrianoms.exceptions.ResourceNotFoundException;
 import br.com.adrianoms.mapper.DozerMapper;
 import br.com.adrianoms.model.Person;
@@ -43,6 +44,9 @@ public class PersonServices {
 	}
 
 	public PersonVO create(PersonVO person) {
+		if(person == null) {
+			throw new RequiredObjectIsNullException();
+		}
 		logger.info("Creating one person!");
 		var entity = respository.save(DozerMapper.parseObject(person, Person.class));
 		PersonVO vo = DozerMapper.parseObject(entity, PersonVO.class);
@@ -51,6 +55,9 @@ public class PersonServices {
 	}
 
 	public PersonVO update(PersonVO person) {
+		if(person == null) {
+			throw new RequiredObjectIsNullException();
+		}
 		logger.info("Creating one person!");
 		var entity = respository.findById(person.getKey())
 				.orElseThrow(() -> new ResourceNotFoundException("No records found to this ID!"));

@@ -35,13 +35,19 @@ public class PersonServices {
 
 	public List<PersonVO> findAll() {
 		logger.info("Finding all people!");
-		return DozerMapper.parseListObjects(respository.findAll(), PersonVO.class);
+		var persons = DozerMapper.parseListObjects(respository.findAll(), PersonVO.class);
+		persons
+			.stream()
+			.forEach(p -> p.add(linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()));
+		return persons;
 	}
 
 	public PersonVO create(PersonVO person) {
 		logger.info("Creating one person!");
 		var entity = respository.save(DozerMapper.parseObject(person, Person.class));
-		return DozerMapper.parseObject(entity, PersonVO.class);
+		PersonVO vo = DozerMapper.parseObject(entity, PersonVO.class);
+		vo.add(linkTo(methodOn(PersonController.class).findById(vo.getKey())).withSelfRel());
+		return vo;
 	}
 
 	public PersonVO update(PersonVO person) {
@@ -52,7 +58,9 @@ public class PersonServices {
 		entity.setLastName(person.getLastName());
 		entity.setAddress(person.getAddress());
 		entity.setGender(person.getGender());
-		return DozerMapper.parseObject(respository.save(entity), PersonVO.class);
+		PersonVO vo = DozerMapper.parseObject(respository.save(entity), PersonVO.class);
+		vo.add(linkTo(methodOn(PersonController.class).findById(vo.getKey())).withSelfRel());
+		return vo;
 	}
 
 	public void delete(Long id) {

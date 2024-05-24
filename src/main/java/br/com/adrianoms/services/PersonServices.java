@@ -58,7 +58,7 @@ public class PersonServices {
 		if(person == null) {
 			throw new RequiredObjectIsNullException();
 		}
-		logger.info("Creating one person!");
+		logger.info("Updating one person!");
 		var entity = respository.findById(person.getKey())
 				.orElseThrow(() -> new ResourceNotFoundException("No records found to this ID!"));
 		entity.setFirstName(person.getFirstName());

@@ -10,6 +10,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "books")
@@ -21,16 +23,17 @@ public class Book implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "title")
+	@Column(nullable = false)
 	private String title;
 	
-	@Column(name = "author")
+	@Column(nullable = false)
 	private String author;
 	
 	@Column(name = "launch_date", nullable = false)
+	@Temporal(TemporalType.DATE)
 	private Date launchDate;
 	
-	@Column(name = "price", nullable = false, precision = 2)
+	@Column(nullable = false, precision = 2)
 	private Double price;
 	
 	public Book() {

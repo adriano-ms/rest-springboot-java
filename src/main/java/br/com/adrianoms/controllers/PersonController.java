@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+//@CrossOrigin
 @RestController
 @RequestMapping("/api/person/v1")
 @Tag(name = "People", description = "Endpoints for Managing People")
@@ -31,6 +32,7 @@ public class PersonController {
 	@Autowired
 	private PersonServices service;
 
+	//@CrossOrigin(origins = "http://localhost:8080")
 	@GetMapping(
 				value = "/{id}",
 				produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
@@ -75,6 +77,7 @@ public class PersonController {
 		return service.findAll();
 	}
 
+	//@CrossOrigin(origins = {"http://localhost:8080","http://adrianoms.com.br"})
 	@PostMapping(
 				consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML },
 				produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })

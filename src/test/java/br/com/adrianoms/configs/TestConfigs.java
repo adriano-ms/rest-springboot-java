@@ -9,5 +9,10 @@ public class TestConfigs {
 	
 	public static final String CONTENT_TYPE_JSON = "application/json";
 	public static final String CONTENT_TYPE_XML = "application/xml";
-	public static final String CONTENT_TYPE_YML = "application/x--yaml";
+	public static final String CONTENT_TYPE_YML = "application/x-yaml";
+	
+	public static final String ORIGIN_ADRIANOMS = "http://adrianoms.com.br";
+	public static final String ORIGIN_GOOGLE = "http://google.com.br";
+
+
 }

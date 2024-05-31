@@ -1,4 +1,4 @@
-package br.com.adrianoms.securityJwt;
+package br.com.adrianoms.security.jwt;
 
 import java.util.Base64;
 import java.util.Date;
@@ -24,7 +24,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Service
-public class JwtTolkenProvider {
+public class JwtTokenProvider {
 
 	@Value("${security.jwt.token.secret-key:secret}")
 	private String secretKey = "secret";

@@ -48,8 +48,8 @@ public class User implements UserDetails, Serializable {
 	@Column(name = "credentials_non_expired")
 	private Boolean credentialsNonExpired;
 	
-	@Column(name = "enable")
-	private Boolean enable;
+	@Column(name = "enabled")
+	private Boolean enabled;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_permission", 
@@ -110,12 +110,12 @@ public class User implements UserDetails, Serializable {
 		this.credentialsNonExpired = credentialsNonExpired;
 	}
 
-	public Boolean getEnable() {
-		return enable;
+	public Boolean getEnabled() {
+		return enabled;
 	}
 
-	public void setEnable(Boolean enable) {
-		this.enable = enable;
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	public List<Permission> getPermissions() {
@@ -170,12 +170,12 @@ public class User implements UserDetails, Serializable {
 
 	@Override
 	public boolean isEnabled() {
-		return this.enable;
+		return this.enabled;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(accountNonExpired, accountNonLocked, credentialsNonExpired, enable, fullName, id, password,
+		return Objects.hash(accountNonExpired, accountNonLocked, credentialsNonExpired, enabled, fullName, id, password,
 				permissions, userName);
 	}
 
@@ -191,7 +191,7 @@ public class User implements UserDetails, Serializable {
 		return Objects.equals(accountNonExpired, other.accountNonExpired)
 				&& Objects.equals(accountNonLocked, other.accountNonLocked)
 				&& Objects.equals(credentialsNonExpired, other.credentialsNonExpired)
-				&& Objects.equals(enable, other.enable) && Objects.equals(fullName, other.fullName)
+				&& Objects.equals(enabled, other.enabled) && Objects.equals(fullName, other.fullName)
 				&& Objects.equals(id, other.id) && Objects.equals(password, other.password)
 				&& Objects.equals(permissions, other.permissions) && Objects.equals(userName, other.userName);
 	}

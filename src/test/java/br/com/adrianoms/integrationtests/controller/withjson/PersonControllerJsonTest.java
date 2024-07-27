@@ -20,6 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import br.com.adrianoms.configs.TestConfigs;
 import br.com.adrianoms.integrationtests.testcontainers.AbstractIntegrationTest;
 import br.com.adrianoms.integrationtests.vo.PersonVO;
+import br.com.adrianoms.integrationtests.vo.TokenVO;
+import br.com.adrianoms.integrationtests.vo.AccountCredentialsVO;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -44,22 +46,41 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	}
 	
 	@Test
-	@Order(1)
-	public void testCreate() throws JsonMappingException, JsonProcessingException {
-		mockPerson();
+	@Order(0)
+	public void authorization() throws JsonMappingException, JsonProcessingException {
+		AccountCredentialsVO credentials = new AccountCredentialsVO("adriano", "123456");
+		
+		var accessToken = 
+				given()
+					.basePath("/auth/signin")
+					.port(TestConfigs.SERVER_PORT)
+					.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.body(credentials)
+					.when()
+						.post()
+					.then()
+						.statusCode(200)
+					.extract().body().as(TokenVO.class).getAccessToken();
 		
 		specification = new RequestSpecBuilder()
-				.addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ADRIANOMS)
+				.addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, "Bearer " + accessToken)
 				.setBasePath("/api/person/v1")
 				.setPort(TestConfigs.SERVER_PORT)
 				.addFilter(new RequestLoggingFilter(LogDetail.ALL))
 				.addFilter(new ResponseLoggingFilter(LogDetail.ALL))
 				.build();
+	}
+	
+	@Test
+	@Order(1)
+	public void testCreate() throws JsonMappingException, JsonProcessingException {
+		mockPerson();
 		
 		var content = 
 				given()
 					.spec(specification)
 					.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.headers(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ADRIANOMS)
 					.body(person)
 					.when()
 						.post()
@@ -90,18 +111,11 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	public void testCreateWithWrongOrigin() throws JsonMappingException, JsonProcessingException {
 		mockPerson();
 		
-		specification = new RequestSpecBuilder()
-				.addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_GOOGLE)
-				.setBasePath("/api/person/v1")
-				.setPort(TestConfigs.SERVER_PORT)
-				.addFilter(new RequestLoggingFilter(LogDetail.ALL))
-				.addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-				.build();
-		
 		var content = 
 				given()
 					.spec(specification)
 					.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.headers(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_GOOGLE)
 					.body(person)
 					.when()
 						.post()
@@ -118,18 +132,11 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	public void testFindById() throws JsonMappingException, JsonProcessingException {
 		mockPerson();
 		
-		specification = new RequestSpecBuilder()
-				.addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ADRIANOMS)
-				.setBasePath("/api/person/v1")
-				.setPort(TestConfigs.SERVER_PORT)
-				.addFilter(new RequestLoggingFilter(LogDetail.ALL))
-				.addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-				.build();
-		
 		var content = 
 				given()
 					.spec(specification)
 					.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.headers(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ADRIANOMS)
 					.pathParam("id", person.getId())
 					.when()
 						.get("{id}")
@@ -160,18 +167,11 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	public void testFindByIdWithWrongOrigin() throws JsonMappingException, JsonProcessingException {
 		mockPerson();
 		
-		specification = new RequestSpecBuilder()
-				.addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_GOOGLE)
-				.setBasePath("/api/person/v1")
-				.setPort(TestConfigs.SERVER_PORT)
-				.addFilter(new RequestLoggingFilter(LogDetail.ALL))
-				.addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-				.build();
-		
 		var content = 
 				given()
 					.spec(specification)
 					.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.headers(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_GOOGLE)
 					.pathParam("id", person.getId())
 					.when()
 						.get("{id}")

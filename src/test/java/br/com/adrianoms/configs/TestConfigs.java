@@ -13,6 +13,4 @@ public class TestConfigs {
 	
 	public static final String ORIGIN_ADRIANOMS = "http://adrianoms.com.br";
 	public static final String ORIGIN_GOOGLE = "http://google.com.br";
-
-
 }

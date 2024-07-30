@@ -3,12 +3,19 @@ package br.com.adrianoms.integrationtests.vo;
 import java.io.Serializable;
 import java.util.Objects;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class AccountCredentialsVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	private String userName;
 	private String password;
+	
+	public AccountCredentialsVO() {
+		super();
+	}
 	
 	public AccountCredentialsVO(String userName, String password) {
 		this.userName = userName;
